@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/index.css">
+    <title>Catalogo de Filmes</title>
+</head>
+<body>
+    <nav>
+        <input type="text" name="buscar" id="buscar" placeholder="buscar">
+    </nav>
+
+    <header>
+        <img class="img1" src="#" alt="">
+        <img class="img2" src="#" alt="">
+        <h2>Nome do Usuário</h2>
+    </header>
+
+    <section class="informacoes">
+        <div class="tempo">
+            <h3 id="tempoAssistindo">Tempo assistindo filmes</h3>
+        </div>
+        <div class="assistidos">
+            <h3>Filmes Assistidos</h3>
+        </div>
+    </section>
+
+    <section id="formularioCadastro">
+        <form>
+            <label for="tituloFilme">Título</label>
+            <input type="text" name="tituloFilme" id="tituloFilme">
+            <label for="notaFilme">Nota</label>
+            <input type="number" min="0" max="5" name="notaFilme" id="notaFilme">
+            <label for="duracaoFilme">Duração em minutos</label>
+            <input type="number" min="0" name="duracaoFilme" id="duracaoFilme">
+            <button onclick="" id="cadastroFilme">Adicionar Filme</button>
+        </form>
+    </section>
+
+    <main>
+        <div id="filmesFavoritos" class="filmesFavoritos">
+            
+        </div>
+        <div id="filmesAdicionados" class="filmesAdicionados">
+            <button id="botaoAdicionar" class="card"></button>
+        </div>
+    </main>
+
+    <script type="module" src="scripts/main.js"></script>
+
+</body>
+</html>
