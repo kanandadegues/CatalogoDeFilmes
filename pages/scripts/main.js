@@ -1,3 +1,4 @@
+const movies = [];
 
 document
 .querySelector("#formularioCadastro form")
@@ -5,18 +6,20 @@ document
     event.preventDefault();
 });
 
-const filmes = [];
+document.getElementById("buscar").addEventListener("input", (e) => {
+    buscarFilmes(e.target.value);
+});
 
 function cadastrarFilme() {
     const filme = pegarDadosFormulario();
-    if (filmeEstaCadastrado(movie.titulo))
+    if (filmeEstaCadastrado(filme.titulo))
     return alert ("Esse filme já foi adicionado!");
 
     filmes.push(filme);
     alert("Filme adicionado com sucesso!")
 
     limparFormulario();
-    console.log(filmes);
+    listarFilmes();
 }
 
 function pegarDadosFormulario(){
@@ -35,4 +38,35 @@ function limparFormulario() {
     document.getElementById("tituloFilme").value = "";
     document.getElementById("notaFilme").value = "";
     document.getElementById("duracaoFilme").value = "";
+}
+
+function listarFilmes() {
+    document.getElementById("filmesAdicionados").innerHTML = filmes.map(
+        (filme) => `
+        <div class="card">
+            <div class="imagemFilme">
+                <img src = "#">
+            </div>
+            <div class="informacoesFilme">
+                <p>${filme.titulo}</p>
+                <p class="nota">Nota: ${filme.nota}</p>
+                <p class="duracao">Duração: ${filme.duracao}</p>
+            </div>
+        </div>
+    `  
+    )
+
+    .join("");
+};
+
+function buscarFilmes(buscar) {
+    const filmesBuscados = filmes.filter((filme) => 
+    buscar ? filme.titulo.toLowerCase().includes(buscar.toLowerCase()) :
+    true
+    );
+
+    if (!filmesBuscados.length)
+    alert("Não foi encontrado nenhum filme com esse título!");
+
+    listarFilmes(buscarFilmes.length ? buscarFilmes : filmes);
 }
