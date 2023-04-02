@@ -1,4 +1,9 @@
-const movies = [];
+import { icones } from "./icones";
+import { controleDom } from "../controll/controleDom"
+import { controladorFilmes } from "../controll/controladorFilmes"
+
+const controladorFilmes = new controladorFilmes();
+const controleDom = new controleDom();
 
 document
 .querySelector("#formularioCadastro form")
@@ -10,63 +15,49 @@ document.getElementById("buscar").addEventListener("input", (e) => {
     buscarFilmes(e.target.value);
 });
 
-function cadastrarFilme() {
-    const filme = pegarDadosFormulario();
-    if (filmeEstaCadastrado(filme.titulo))
+window.cadastrarFilme = () => {
+    const filme = controleDom.pegarDadosFormulario();
+    if (controladorFilmes.filmeEstaCadastrado(filme.titulo))
     return alert ("Esse filme já foi adicionado!");
 
-    filmes.push(filme);
+    controladorFilmes.addFilme(filme);
+    controleDom.addCard(filme);
     alert("Filme adicionado com sucesso!")
 
-    limparFormulario();
-    listarFilmes();
-}
-
-function pegarDadosFormulario(){
-    const titulo = document.getElementById("tituloFilme").value;
-    const nota = document.getElementById("notaFilme").value;
-    const duracao = document.getElementById("duracaoFilme").value;
-
-    return { titulo, nota, duracao, favorito: false, assistido: false };
-}
-
-function filmeEstaCadastrado(titulo) {
-    return filmes.find((filme) => filme.titulo === titulo);
-}
-
-function limparFormulario() {
-    document.getElementById("tituloFilme").value = "";
-    document.getElementById("notaFilme").value = "";
-    document.getElementById("duracaoFilme").value = "";
-}
-
-function listarFilmes() {
-    document.getElementById("filmesAdicionados").innerHTML = filmes.map(
-        (filme) => `
-        <div class="card">
-            <div class="imagemFilme">
-                <img src = "#">
-            </div>
-            <div class="informacoesFilme">
-                <p>${filme.titulo}</p>
-                <p class="nota">Nota: ${filme.nota}</p>
-                <p class="duracao">Duração: ${filme.duracao}</p>
-            </div>
-        </div>
-    `  
-    )
-
-    .join("");
+    controleDom.limparFormulario();
 };
 
-function buscarFilmes(buscar) {
-    const filmesBuscados = filmes.filter((filme) => 
-    buscar ? filme.titulo.toLowerCase().includes(buscar.toLowerCase()) :
-    true
+window.atualizacaoFilme = (titulo, chave) => {
+    const indice = controladorFilmes.indiceFilme(titulo);
+    const filmes = controladorFilmes.filmes;
+    const chaveNovoValor = !filmes[indice][chave];
+    
+    if (chave === "favorito" && chaveNovoValor && controladorFilmes.maximoFavorito())
+        return alert("Já existem três filmes favoritos");
+
+    filmes[indice][chave] = chaveNovoValor;
+
+    if (chave === "assistido") controleDom.atualizarTempoAssistido(filmes);
+    controladorFilmes.atualizarElemento(titulo, chave, chaveNovoValor);
+
+};
+
+function atualizarTempoAssistido() {
+    const minutosTotais = filmes.reduce((tempo, filme) => (tempo += filme.assistido ? +filme.duracao : 0),
+    0
     );
 
-    if (!filmesBuscados.length)
-    alert("Não foi encontrado nenhum filme com esse título!");
+    const tempo = pegarTempoCalculado(minutosTotais);
 
-    listarFilmes(buscarFilmes.length ? buscarFilmes : filmes);
-}
+    document.getElementById("tempoAssistindo").querySelector("span").innerHTML = `${
+        tempo.horas ? tempo.horas + " horas" : ""
+    }${
+        tempo.horas && tempo.minutosTotais 
+        ? " e " + tempo.minutos + " minuto" + tempo.minutos
+        : !tempo.horas
+        ? tempo.minutos + " minuto"
+        : ""
+    }.`;
+};
+
+
